@@ -9,7 +9,7 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace GroupExpenseManager.API.Migrations
 {
     [DbContext(typeof(DataContext))]
-    [Migration("20200407120524_InitialCreate")]
+    [Migration("20200407171246_InitialCreate")]
     partial class InitialCreate
     {
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
@@ -256,9 +256,12 @@ namespace GroupExpenseManager.API.Migrations
                         .HasColumnType("TEXT");
 
                     b.Property<string>("UserName")
+                        .IsRequired()
                         .HasColumnType("TEXT");
 
                     b.HasKey("Id");
+
+                    b.HasAlternateKey("UserName");
 
                     b.ToTable("Users");
                 });

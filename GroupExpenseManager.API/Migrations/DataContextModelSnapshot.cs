@@ -254,9 +254,12 @@ namespace GroupExpenseManager.API.Migrations
                         .HasColumnType("TEXT");
 
                     b.Property<string>("UserName")
+                        .IsRequired()
                         .HasColumnType("TEXT");
 
                     b.HasKey("Id");
+
+                    b.HasAlternateKey("UserName");
 
                     b.ToTable("Users");
                 });

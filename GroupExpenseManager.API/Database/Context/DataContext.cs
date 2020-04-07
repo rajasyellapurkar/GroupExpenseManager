@@ -30,6 +30,8 @@ namespace GroupExpenseManager.API.Database.Context
                         .WithMany(g=>g.UserGroups)
                         .HasForeignKey(ug=>ug.GroupId)
                         .OnDelete(DeleteBehavior.Restrict);
+
+            modelBuilder.Entity<User>().HasAlternateKey(u=>u.UserName);
         }
     }
 }

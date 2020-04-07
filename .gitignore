@@ -3,3 +3,5 @@ GroupExpenseManager.API/bin
 GroupExpenseManager.Tests/obj
 GroupExpenseManager.Tests/bin
 GroupExpenseManager.API/groupExpenseMgr.db
+GroupExpenseManager.API/groupExpenseMgr.db-shm
+GroupExpenseManager.API/groupExpenseMgr.db-wal
