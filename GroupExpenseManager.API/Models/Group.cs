@@ -10,7 +10,7 @@ namespace GroupExpenseManager.API.Models
         public string GroupDescription { get; set; }
         public string GroupPhotoUrl { get; set; }
         public DateTime CreationDate { get; set; }
-        public ICollection<UserGroup> Users { get; set; }
+        public ICollection<UserGroup> UserGroups { get; set; }
         public ICollection<Expense> Expenses { get; set; }
         public ICollection<Account> Accounts { get; set; }
         public ICollection<Category> Categories { get; set; }
