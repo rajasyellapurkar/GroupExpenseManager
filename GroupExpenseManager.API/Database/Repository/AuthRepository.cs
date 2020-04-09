@@ -2,19 +2,24 @@ using System.Threading.Tasks;
 using GroupExpenseManager.API.Database.Context;
 using GroupExpenseManager.API.Models;
 using Microsoft.EntityFrameworkCore;
+using Microsoft.Extensions.Logging;
 
 namespace GroupExpenseManager.API.Database.Repository
 {
-    public class AuthRepository : IAuthRepository
+    public class AuthRepository : BaseRepository,IAuthRepository
     {
         private readonly DataContext _context;
-        public AuthRepository(DataContext context)
+        private readonly ILogger<AuthRepository> _logger;
+        public AuthRepository(DataContext context,ILogger<AuthRepository> logger):base(context,logger)
         {
             _context = context;
+            _logger = logger;
         }
 
         public async Task<User> Register(User user, string password)
         {
+            _logger.LogDebug(1,"Registering user with below details: ");
+            LogProperties(user);
             byte[] passwordHash, passwordSalt;
             CreatePasswordHash(password, out passwordHash, out passwordSalt);
 

@@ -21,6 +21,7 @@ namespace GroupExpenseManager.API.Controllers
         } 
         
         [HttpGet("{id}",Name="GetUser")]
+        [AllowAnonymous]
         public async Task<IActionResult> GetUser(int id)
         {
             var userFromRepo = await _authRepository.GetUser(id);

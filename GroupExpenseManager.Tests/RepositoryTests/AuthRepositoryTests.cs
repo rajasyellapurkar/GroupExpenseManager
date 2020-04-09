@@ -5,19 +5,28 @@ using GroupExpenseManager.API.Database.Context;
 using GroupExpenseManager.API.Database.Repository;
 using GroupExpenseManager.API.Models;
 using GroupExpenseManager.Tests.RepositoryTests.Helper;
+using Microsoft.Extensions.Logging;
+using Moq;
 using Xunit;
 
 namespace GroupExpenseManager.Tests.RepositoryTests
 {
     public class AuthRepositoryTests
     {
-        private readonly DataContext _context;
+        private DataContext _context;
         private readonly IAuthRepository _authRepository;
+        private Mock<ILogger<AuthRepository>> _loggerMock;
 
         public AuthRepositoryTests()
         {
+           InitializeMocks();
+            _authRepository = new AuthRepository(_context,_loggerMock.Object);
+        }
+
+        private void InitializeMocks()
+        {
+            _loggerMock = new Mock<ILogger<AuthRepository>>();
             _context = new InMemoryDbContextFactory().GetInMemoryDbContext();
-            _authRepository = new AuthRepository(_context);
         }
 
         [Fact]

@@ -5,3 +5,4 @@ GroupExpenseManager.Tests/bin
 GroupExpenseManager.API/groupExpenseMgr.db
 GroupExpenseManager.API/groupExpenseMgr.db-shm
 GroupExpenseManager.API/groupExpenseMgr.db-wal
+.vscode
