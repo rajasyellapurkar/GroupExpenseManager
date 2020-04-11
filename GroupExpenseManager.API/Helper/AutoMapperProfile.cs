@@ -9,7 +9,11 @@ namespace GroupExpenseManager.API.Helper
         public AutoMapperProfile()
         {
             CreateMap<UserForCreationDto,User>();
-            CreateMap<User,UserToReturnDto>();
+            CreateMap<User,UserToReturnDto>()
+                        .ForMember(u=>u.Age, opt=>opt.MapFrom(src=>src.DateOfBirth.CalculateAge()));
+            CreateMap<GroupForCreationDto,Group>();
+            CreateMap<Group,GroupToReturnDto>();
+            CreateMap<Account,AccountForCreationDto>().ReverseMap();
         }
     }
 }

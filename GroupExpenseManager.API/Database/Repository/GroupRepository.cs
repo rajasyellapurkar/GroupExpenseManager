@@ -34,19 +34,18 @@ namespace GroupExpenseManager.API.Database.Repository
             }
 
             return null;
-        }
+        }        
 
-        public async Task<ICollection<Account>> GetGroupAccouts(int groupId)
+        public async Task<ICollection<Account>> GetGroupAccounts(int groupId)
         {
-            _logger.LogDebug("GetGroupAccouts for group id:",groupId);
-            var group = await _context.Groups.FirstOrDefaultAsync(g => g.Id == groupId);
+            _logger.LogDebug($"GetGroupAccouts for group id {groupId}");
+            var group = await _context.Groups.Include(g=>g.Accounts).FirstOrDefaultAsync(g => g.Id == groupId);
             if (group != null)
             {
                 return group.Accounts;
             }
             return null;
         }
-
         public async Task<Group> GetGroupById(int groupId)
         {
             _logger.LogDebug("Get group details for group id: ", groupId);
@@ -76,13 +75,14 @@ namespace GroupExpenseManager.API.Database.Repository
             return null;
         }
 
-        public async Task<ICollection<User>> GetGroupUsers(int groupId)
+        public async Task<IEnumerable<User>> GetGroupUsers(int groupId)
         {
-             _logger.LogDebug($"Get Group Users for group id:", groupId);
-            var group = await _context.Groups.FirstOrDefaultAsync(g => g.Id == groupId);
+            _logger.LogDebug($"Get Group Users for group id:{groupId}");
+            var group = await _context.Groups.Include(g=>g.UserGroups)
+                                             .ThenInclude(u=>u.User).FirstOrDefaultAsync(g => g.Id == groupId);
             if (group != null)
             {
-                return group.UserGroups.Select(u => u.User).ToList();
+                return group.UserGroups.Select(u => u.User);
             }
             return null;
         }
@@ -123,7 +123,6 @@ namespace GroupExpenseManager.API.Database.Repository
                 return group.UserGroups.Where(u => u.IsAdmin).Select(u => u.User).ToList();
             }
             return null;
-        }
-        
+        }        
     }
 }

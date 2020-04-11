@@ -14,6 +14,5 @@ namespace GroupExpenseManager.API.Dtos
         public string PhotoUrl { get; set; }
         public string Age { get; set; }
         public Gender Gender { get; set; }
-        public ICollection<Group> UserGroups { get; set; }
     }
 }

@@ -1,21 +1,15 @@
-using System;
-using System.Collections.Generic;
-using System.Linq;
 using System.Text;
-using System.Threading.Tasks;
 using AutoMapper;
 using GroupExpenseManager.API.Database.Context;
 using GroupExpenseManager.API.Database.Repository;
+using GroupExpenseManager.API.Managers;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
-using Microsoft.AspNetCore.HttpsPolicy;
-using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
-using Microsoft.Extensions.Logging;
 using Microsoft.IdentityModel.Tokens;
 
 namespace GroupExpenseManager.API
@@ -32,20 +26,31 @@ namespace GroupExpenseManager.API
         // This method gets called by the runtime. Use this method to add services to the container.
         public void ConfigureServices(IServiceCollection services)
         {
-            services.AddControllers();
+            services.AddControllers().AddNewtonsoftJson(opt =>
+                                        {
+                                            opt.SerializerSettings.ReferenceLoopHandling =  
+                                            Newtonsoft.Json.ReferenceLoopHandling.Ignore;
+                                        }
+                                        );
             services.AddDbContext<DataContext>(x => x.UseSqlite(Configuration.GetConnectionString("DefaultConnection")));
             services.AddAutoMapper(typeof(AuthRepository).Assembly);
             /* AddScoped : Create new instance per request */
-            services.AddScoped<IAuthRepository,AuthRepository>(); 
+            services.AddScoped<IAuthRepository, AuthRepository>();
+            services.AddScoped<IGroupRepository, GroupRepository>();
+            services.AddScoped<IAccountRepository, AccountRepository>();
+            services.AddScoped<IGroupManager, GroupManager>();
+            services.AddScoped<IUserGroupRepository,UserGroupRepository>();
             /*Jwt Token Authentication*/
-            services.AddAuthentication(JwtBearerDefaults.AuthenticationScheme).AddJwtBearer(options=> {
-                options.TokenValidationParameters = new TokenValidationParameters{
-                    ValidateIssuerSigningKey =true,
+            services.AddAuthentication(JwtBearerDefaults.AuthenticationScheme).AddJwtBearer(options =>
+            {
+                options.TokenValidationParameters = new TokenValidationParameters
+                {
+                    ValidateIssuerSigningKey = true,
                     IssuerSigningKey = new SymmetricSecurityKey(Encoding.UTF8.
                                         GetBytes(Configuration.GetSection("AppSettings:Token").Value)),
-                    ValidateIssuer =false,
-                    ValidateAudience =false
-                };                
+                    ValidateIssuer = false,
+                    ValidateAudience = false
+                };
             });
 
         }
@@ -62,7 +67,7 @@ namespace GroupExpenseManager.API
 
             app.UseRouting();
 
-            app.UseCors(x=>x.AllowAnyOrigin().AllowAnyMethod().AllowAnyHeader());
+            app.UseCors(x => x.AllowAnyOrigin().AllowAnyMethod().AllowAnyHeader());
 
             app.UseAuthentication();
 
